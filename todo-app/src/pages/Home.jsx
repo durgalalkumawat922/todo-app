@@ -4,7 +4,7 @@ import { Loader2Icon } from "lucide-react";
 import { toast } from "react-toastify";
 
 function Home() {
-  const [myTask, setMyTask] = useState({ title: "", description: "" });
+  const [myTask, setMyTask] = useState({ title: "", description:"" });
 
   const [taskData, setMyTaskData] = useState([]);
   const [loading, setLoading] = useState(false);
