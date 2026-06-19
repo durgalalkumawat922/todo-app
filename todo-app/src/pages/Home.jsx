@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Mytask from "../components/Mytask";
 import { Loader2Icon } from "lucide-react";
 import { toast } from "react-toastify";
 
 function Home() {
-  const [myTask, setMyTask] = useState({ title: "", description:"" });
+  const [myTask, setMyTask] = useState({ title: "", description: "" });
 
-  const [taskData, setMyTaskData] = useState([]);
+  const [taskData, setMyTaskData] = useState({});
   const [loading, setLoading] = useState(false);
 
   const addTask = async (e) => {
@@ -22,14 +22,29 @@ function Home() {
 
     const data = await res.json();
     if (data.success == false) {
-      console.log(data.message);
-      toast.error(data.message);
+      setLoading(false);
+      return toast.error(data.message);
     }
 
+    getAllTask();
     toast.success(data.message);
     setLoading(false);
   };
 
+  const getAllTask = async () => {
+    const res = await fetch("http://localhost:5000/api/task/getalltask", {
+      method: "get",
+    });
+
+    const data = await res.json();
+    setMyTaskData(data.data);
+  };
+
+  useEffect(() => {
+    getAllTask();
+  }, []);
+
+  console.log(taskData);
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-blue-50 p-8 mt-14">
       <div className="max-w-6xl mx-auto">
@@ -84,7 +99,7 @@ function Home() {
         </section>
 
         {taskData.length > 0 && (
-          <Mytask taskData={taskData} setMyTaskData={setMyTaskData} />
+          <Mytask taskData={taskData} setMyTaskData={setMyTaskData} getAllTask={getAllTask}/>
         )}
       </div>
     </div>
