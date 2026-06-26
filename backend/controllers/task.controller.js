@@ -9,6 +9,15 @@ export const addTask = async (req, res) => {
       .json({ success: false, message: "all fields required" });
   }
 
+  const isTitleExist = await Task.findOne({ title: title });
+  const isDecExist = await Task.findOne({ description: description });
+
+  if (isTitleExist || isDecExist) {
+    return res
+      .status(404)
+      .json({ message: "Task Details Already Exist", success: false });
+  }
+
   const newTask = new Task({
     title,
     description,
